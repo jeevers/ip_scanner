@@ -1,0 +1,27 @@
+div.vlan {
+	float:left;
+	padding: 20px;
+}
+
+table {
+	border-collapse: collapse;
+	background-color: gray;
+}
+
+table, th, td {
+	font-family: courier;
+	border: 1px solid black;
+}
+
+th {
+	color: white;
+}
+
+.active {
+	background-color: green;
+}
+
+.inactive {
+	background-color: red;
+}
+
