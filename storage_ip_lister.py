@@ -6,6 +6,7 @@ import tornado.web
 import os
 import re
 import yaml
+import iptools
 
 from sh import nmap
 from dns import reversename, resolver
@@ -19,14 +20,14 @@ def config():
 
 
 def disp_storage_ips(subnets):
-    nmap_args = ["-nsP"] + [item+"0/24" for item in subnets]
+    nmap_args = ["-nsP"] + [item for item in subnets]
     vlans = nmap(nmap_args)
     ip_patt = '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
     p = re.compile(ip_patt)
     #p.findall(vlans.stdout)
     active_ips = p.findall(vlans.stdout)
 
-    storage_ips = [[subnet+str(last_oct) for last_oct in range(1,256)] for subnet in subnets]
+    storage_ips = [iptools.IpRangeList(subnet) for subnet in subnets]
 
     ip_usage = []
 
