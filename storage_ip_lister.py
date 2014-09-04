@@ -14,7 +14,7 @@ ip_nets = ["192.168.11.",
        "192.168.122.",
        "192.168.115."]
 #ip_nets = ["192.168.11."]
-port_listen = 8008
+port_listen = 8068
 poll_interval = 20
 ip_scan = []
 
@@ -24,6 +24,16 @@ def disp_storage_ips(subnets):
     ip_patt = '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
     p = re.compile(ip_patt)
     p.findall(vlans.stdout)
+
+    dns_resolved = "Host (.*) \(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\) appears to be up"
+    resolved_re = re.compile(dns_resolved)
+    resolved = resolved_re.findall(vlans.stdout)
+
+    hostname_dict = {}
+
+    for record in resolved:
+        hostname_dict[record[1]] = record[0]
+
     storage_ips = [[subnet+str(last_oct) for last_oct in range(1,256)] for subnet in subnets]
 
     active_ips = p.findall(vlans.stdout)
@@ -34,9 +44,12 @@ def disp_storage_ips(subnets):
         vlan_list = []
         for ip in vlan:
             if ip in active_ips:
-                vlan_list.append([ip,'ACTIVE'])
+                try:
+                    vlan_list.append([ip, 'ACTIVE', hostname_dict[ip]]) 
+                except KeyError:
+                    vlan_list.append([ip, 'ACTIVE', ''])
             else:
-                vlan_list.append([ip,'INACTIVE'])
+                vlan_list.append([ip, 'INACTIVE', ''])
         ip_usage.append(vlan_list)
     return ip_usage
 

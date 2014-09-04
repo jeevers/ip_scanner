@@ -11,6 +11,7 @@
 					<tr>
 						<th>IP Address</th>
 						<th>State</th>
+						<th>DNS Name</th>
 					</tr>
 				<thead>
 				{% for ip in vlan %}
@@ -23,6 +24,9 @@
 					{% end %}
 					{{ escape(ip[1]) }}
 					</td>
+                    <td>
+                    {{ escape(ip[2]) }}
+                    </td>
 				</tr>
 				{% end %}
 			</table>
