@@ -1,27 +1,32 @@
 div.vlan {
-	float:left;
-	padding: 20px;
+    float:left;
+    padding: 20px;
 }
 
 table {
-	border-collapse: collapse;
-	background-color: gray;
+    border-collapse: collapse;
+    background-color: gray;
 }
 
 table, th, td {
-	font-family: courier;
-	border: 1px solid black;
+    font-family: courier;
+    border: 1px solid black;
 }
 
 th {
-	color: white;
+    color: white;
 }
 
 .active {
-	background-color: green;
+    background-color: green;
 }
 
 .inactive {
-	background-color: red;
+    background-color: red;
 }
 
+div.selections {
+   position: fixed;
+   width: 100%;
+   top: 0px;
+}

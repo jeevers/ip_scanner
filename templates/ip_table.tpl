@@ -2,8 +2,13 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="/static/style.css" type="text/css" />
+        <script src="/static/jquery-2.1.1.min.js"></script>
+        <script src="/static/ip_table.js"></script>
 	</head>
 	<body>
+        <div class="selections">
+            <button type="button" class="dnstoggle">Toggle Name Resolution</button>
+        </div>
 		{% for vlan in ip_usage %}
 		<div class="vlan">
 			<table>
@@ -11,7 +16,7 @@
 					<tr>
 						<th>IP Address</th>
 						<th>State</th>
-						<th>DNS Name</th>
+						<th class="dnsname">DNS Name</th>
 					</tr>
 				<thead>
 				{% for ip in vlan %}
@@ -24,7 +29,7 @@
 					{% end %}
 					{{ escape(ip[1]) }}
 					</td>
-                    <td>
+                    <td class="dnsname">
                     {{ escape(ip[2]) }}
                     </td>
 				</tr>
