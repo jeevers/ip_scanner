@@ -6,11 +6,16 @@
         <script src="/static/ip_table.js"></script>
 	</head>
 	<body>
-        <div class="selections">
+        <div id="selections">
             <button type="button" class="dnstoggle">Toggle Name Resolution</button>
+            {% for index, vlan in enumerate(ip_usage) %}
+               {% set iprange = vlan[0][0]+"-"+".".join(vlan[-1][0].split('.')[-2:]) %}
+               <input type="checkbox" name="subnet" value="{{escape("subnet"+str(index))}}" checked>{{escape(iprange)}}<br>
+            {% end %}
         </div>
-		{% for vlan in ip_usage %}
-		<div class="vlan">
+        <div id='tablecontainer'>
+        {% for index, vlan in enumerate(ip_usage) %}
+		<div class="vlan" id="{{escape("subnet"+str(index))}}">
 			<table>
 				<thead>
 					<tr>
@@ -37,5 +42,6 @@
 			</table>
 		</div>
 		{% end %}
+        </div>
 	</body>
 </html>

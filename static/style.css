@@ -1,5 +1,5 @@
 div.vlan {
-    float:left;
+    float: left;
     padding: 20px;
 }
 
@@ -25,8 +25,14 @@ th {
     background-color: red;
 }
 
-div.selections {
+#selections {
    position: fixed;
-   width: 100%;
+   float: left;
+   width: 180px;
+   height: 100%;
    top: 0px;
+}
+
+#tablecontainer {
+   padding-left: 180px;
 }
