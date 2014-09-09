@@ -10,7 +10,7 @@
             <button type="button" class="dnstoggle">Toggle Name Resolution</button>
             {% for index, vlan in enumerate(ip_usage) %}
                {% set iprange = vlan[0][0]+"-"+".".join(vlan[-1][0].split('.')[-2:]) %}
-               <input type="checkbox" name="subnet" value="{{escape("subnet"+str(index))}}" checked>{{escape(iprange)}}<br>
+               <input type="checkbox" name="subnet" value="{{escape("subnet"+str(index))}}" checked><a href="/#{{escape("subnet"+str(index))}}">{{escape(iprange)}}</a><br>
             {% end %}
         </div>
         <div id='tablecontainer'>
@@ -19,7 +19,7 @@
 			<table>
 				<thead>
 					<tr>
-						<th>IP Address</th>
+						<th><a name="{{ escape("subnet"+str(index)) }}">IP Address</a></th>
 						<th>State</th>
 						<th class="dnsname">DNS Name</th>
 					</tr>
