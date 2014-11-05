@@ -8,13 +8,12 @@
 	<body>
         <div id="selections">
             <button type="button" class="dnstoggle">Toggle Name Resolution</button>
-            {% for index, vlan in enumerate(ip_usage) %}
-               {% set iprange = vlan[0][0]+"-"+".".join(vlan[-1][0].split('.')[-2:]) %}
-               <input type="checkbox" name="subnet" value="{{escape("subnet"+str(index))}}" checked><a href="/#{{escape("subnet"+str(index))}}">{{escape(iprange)}}</a><br>
+            {% for index, subnet in enumerate(ip_usage) %}
+               <input type="checkbox" name="subnet" value="{{escape("subnet"+str(index))}}" checked><a href="/#{{escape("subnet"+str(index))}}">{{escape(subnet)}}</a><br>
             {% end %}
         </div>
         <div id='tablecontainer'>
-        {% for index, vlan in enumerate(ip_usage) %}
+        {% for index, subnet in enumerate(ip_usage) %}
 		<div class="vlan" id="{{escape("subnet"+str(index))}}">
 			<table>
 				<thead>
@@ -24,7 +23,7 @@
 						<th class="dnsname">DNS Name</th>
 					</tr>
 				<thead>
-				{% for ip in vlan %}
+				{% for ip in ip_usage[subnet] %}
 				<tr>
 					<td>{{ escape(ip[0]) }}</td>
 					{% if ip[1] == 'ACTIVE' %}

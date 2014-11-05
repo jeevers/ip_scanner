@@ -7,10 +7,12 @@ import os
 import re
 import yaml
 import iptools
+import time
 
 from sh import nmap
 from dns import reversename, resolver
 
+import db
 
 def config():
     config_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
@@ -19,7 +21,35 @@ def config():
         return config_dict
 
 
-def disp_storage_ips(subnets):
+#def disp_storage_ips(subnets):
+#    nmap_args = ["-nsP"] + [item for item in subnets]
+#    vlans = nmap(nmap_args)
+#    ip_patt = '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+#    p = re.compile(ip_patt)
+#    #p.findall(vlans.stdout)
+#    active_ips = p.findall(vlans.stdout)
+#
+#    storage_ips = [iptools.IpRangeList(subnet) for subnet in subnets]
+#
+#    ip_usage = []
+#
+#    for vlan in storage_ips:
+#        vlan_list = []
+#        for ip in vlan:
+#            #print ip
+#            try:
+#                host = reversename.from_address(ip)
+#                name = resolver.query(host, 'PTR')[0].to_text()
+#            except resolver.NXDOMAIN:
+#                name = ''
+#            if ip in active_ips:
+#                vlan_list.append([ip, 'ACTIVE', name])
+#            else:
+#                vlan_list.append([ip, 'INACTIVE', name])
+#        ip_usage.append(vlan_list)
+#    return ip_usage
+
+def scan_subnets(subnets):
     nmap_args = ["-nsP"] + [item for item in subnets]
     vlans = nmap(nmap_args)
     ip_patt = '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
@@ -27,29 +57,31 @@ def disp_storage_ips(subnets):
     #p.findall(vlans.stdout)
     active_ips = p.findall(vlans.stdout)
 
-    storage_ips = [iptools.IpRangeList(subnet) for subnet in subnets]
+    #storage_ips = [iptools.IpRangeList(subnet) for subnet in subnets]
+    subnet_ips = {subnet: iptools.IpRangeList(subnet) for subnet in subnets}
+    
+    ip_usage = {}
 
-    ip_usage = []
-
-    for vlan in storage_ips:
-        vlan_list = []
-        for ip in vlan:
+    for subnet, ip_range in subnet_ips.iteritems():
+        ip_list = []
+        for ip in ip_range:
+            #print ip
             try:
                 host = reversename.from_address(ip)
                 name = resolver.query(host, 'PTR')[0].to_text()
             except resolver.NXDOMAIN:
                 name = ''
             if ip in active_ips:
-                vlan_list.append([ip, 'ACTIVE', name])
+                ip_list.append([ip, 'ACTIVE', name])
             else:
-                vlan_list.append([ip, 'INACTIVE', name])
-        ip_usage.append(vlan_list)
+                ip_list.append([ip, 'INACTIVE', name])
+        ip_usage[subnet] = ip_list
     return ip_usage
 
 def ip_poll():
     print("ip scan start")
     global ip_scan
-    ip_scan = disp_storage_ips(config()['subnets'])
+    ip_scan = scan_subnets(config()['subnets'])
     print("ip scan stop")
 
 class mainHandler(tornado.web.RequestHandler):
