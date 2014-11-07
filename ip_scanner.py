@@ -12,8 +12,6 @@ import time
 from sh import nmap
 from dns import reversename, resolver
 
-import db
-
 def config():
     config_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
     with file(config_path, 'r') as config_file:
@@ -93,13 +91,23 @@ class mainHandler(tornado.web.RequestHandler):
             #ip_usage = disp_storage_ips(ip_nets)
             self.render('ip_table.tpl', ip_usage=ip_scan)
 
+class JSONHandler(tornado.web.RequestHandler):
+    def get(self):
+        global ip_scan
+        self.write(ip_scan)
+
+
 settings = {
     'static_path': os.path.join(os.path.dirname(__file__), 'static'),
     'template_path': os.path.join(os.path.dirname(__file__), 'templates')
 }
 
 application = tornado.web.Application([
-	(r'/', mainHandler),
+	(r'/old', mainHandler),
+        (r'/(index\.html)', tornado.web.StaticFileHandler,
+         {'path': settings['template_path']}),
+        (r'/', tornado.web.RedirectHandler, {'url': '/index.html'}), 
+	(r'/ip_scan.json', JSONHandler),
 ], **settings)
 
 if __name__ == '__main__':
