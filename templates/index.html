@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app="ipScannerApp">
+	<head>
+		<link rel="stylesheet" href="/static/style.css" type="text/css" />
+        <script src="/static/lib/angular/angular.js"></script>
+        <script src="/static/lib/angular-resource/angular-resource.js"></script>
+        <script src="/static/js/app.js"></script>
+        <script src="/static/js/controller.js"></script>
+        <script src="/static/js/services.js"></script>
+        <script src="/static/js/filters.js"></script>
+	</head>
+	<body ng-controller="ipScannerCtrl">
+        <div id="selections">
+           <input type="checkbox" ng-model='toggledns'>Name Resolution<br>
+           <button ng-click="selecttoggle()">Select {{selectvar}}</button>
+           <div ng-repeat="(subnet,iprange) in ips", ng-init="subnets[subnet] = true">
+               <input type="checkbox" checked ng-model="subnets[subnet]" ><a href="#{{subnet|cidrdeformatter}}">{{subnet}}</a><br>
+           </div>
+        </div>
+        
+        <div id='tablecontainer'>
+            <div  class="vlan" ng-repeat="(subnet, iprange) in ips" ng-hide="!subnets[subnet]">
+                 <table>
+                    <tr>
+                        <th><a name="{{subnet|cidrdeformatter}}">IP Address</a></th>
+                        <th>State</th>
+                        <th class="dnsname" ng-hide="!toggledns">DNS Name</th>
+                    </tr>
+                    <tr ng-repeat="ip in iprange">
+                        <td>{{key + " " + ip[0]}}</td>
+                        <td ng-class="ip[1] | stateCSS">{{ip[1]}}</td>
+                        <td class="dnsname" ng-hide="!toggledns">{{ip[2]}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+                <!--<div id="selections">
+            <button type="button" class="dnstoggle">Toggle Name Resolution</button>
+            {% for index, vlan in enumerate(ip_usage) %}
+               {% set iprange = vlan[0][0]+"-"+".".join(vlan[-1][0].split('.')[-2:]) %}
+               <input type="checkbox" name="subnet" value="{{escape("subnet"+str(index))}}" checked><a href="/#{{escape("subnet"+str(index))}}">{{escape(iprange)}}</a><br>
+            {% end %}
+        </div>
+        <div id='tablecontainer'>
+        {% for index, vlan in enumerate(ip_usage) %}
+		<div class="vlan" id="{{escape("subnet"+str(index))}}">
+			<table>
+				<thead>
+					<tr>
+						<th><a name="{{ escape("subnet"+str(index)) }}">IP Address</a></th>
+						<th>State</th>
+						<th class="dnsname">DNS Name</th>
+					</tr>
+				<thead>
+				{% for ip in vlan %}
+				<tr>
+					<td>{{ escape(ip[0]) }}</td>
+					{% if ip[1] == 'ACTIVE' %}
+					<td class="active">
+					{% else %}
+					<td class="inactive">
+					{% end %}
+					{{ escape(ip[1]) }}
+					</td>
+                    <td class="dnsname">
+                    {{ escape(ip[2]) }}
+                    </td>
+				</tr>
+				{% end %}
+			</table>
+		</div>
+		{% end %}
+        </div>-->
+	</body>
+</html>
