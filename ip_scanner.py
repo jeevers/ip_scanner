@@ -18,35 +18,6 @@ def config():
         config_dict = yaml.load(config_file)
         return config_dict
 
-
-#def disp_storage_ips(subnets):
-#    nmap_args = ["-nsP"] + [item for item in subnets]
-#    vlans = nmap(nmap_args)
-#    ip_patt = '(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
-#    p = re.compile(ip_patt)
-#    #p.findall(vlans.stdout)
-#    active_ips = p.findall(vlans.stdout)
-#
-#    storage_ips = [iptools.IpRangeList(subnet) for subnet in subnets]
-#
-#    ip_usage = []
-#
-#    for vlan in storage_ips:
-#        vlan_list = []
-#        for ip in vlan:
-#            #print ip
-#            try:
-#                host = reversename.from_address(ip)
-#                name = resolver.query(host, 'PTR')[0].to_text()
-#            except resolver.NXDOMAIN:
-#                name = ''
-#            if ip in active_ips:
-#                vlan_list.append([ip, 'ACTIVE', name])
-#            else:
-#                vlan_list.append([ip, 'INACTIVE', name])
-#        ip_usage.append(vlan_list)
-#    return ip_usage
-
 def scan_subnets(subnets):
     nmap_args = ["-nsP"] + [item for item in subnets]
     vlans = nmap(nmap_args)
@@ -66,7 +37,10 @@ def scan_subnets(subnets):
             #print ip
             try:
                 host = reversename.from_address(ip)
-                name = resolver.query(host, 'PTR')[0].to_text()
+                #in case there are multiple reverse entries for a
+                #given IP
+                names = [nm.to_text() for nm in resolver.query(host, 'PTR')]
+                name = ','.join(names)
             except resolver.NXDOMAIN:
                 name = ''
             if ip in active_ips:
