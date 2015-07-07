@@ -2,6 +2,9 @@ var ipScannerControllers = angular.module('ipScannerControllers', []);
 ipScannerControllers.controller('ipScannerCtrl', ['$scope', 'IPs', function($scope, IPs){
    $scope.test = "blah!!!!!!!!";
    $scope.ips = IPs.query();
+   $scope.loadData = function () {
+      $scope.ips = IPs.query();
+   }
    $scope.toint = function(num) {
       return parseInt(num);
    }
