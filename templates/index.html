@@ -11,7 +11,8 @@
 	</head>
 	<body ng-controller="ipScannerCtrl">
         <div id="selections">
-            <button ng-click="loadData()">Refresh</button><br>
+           <button ng-click="loadData()">Refresh</button>
+           <input type="number" ng-model="refreshTime" ng-change="updateRefresh()" ng-trim="false" />min<br>
            <input type="checkbox" ng-model='toggledns'>Name Resolution<br>
            <button ng-click="selecttoggle()">Select {{selectvar}}</button>
            <div ng-repeat="(subnet,iprange) in ips", ng-init="subnets[subnet] = true">

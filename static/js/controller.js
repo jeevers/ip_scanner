@@ -1,5 +1,5 @@
 var ipScannerControllers = angular.module('ipScannerControllers', []);
-ipScannerControllers.controller('ipScannerCtrl', ['$scope', 'IPs', function($scope, IPs){
+ipScannerControllers.controller('ipScannerCtrl', ['$scope', 'IPs', '$interval', function($scope, IPs, $interval){
    $scope.test = "blah!!!!!!!!";
    $scope.ips = IPs.query();
    $scope.loadData = function () {
@@ -8,6 +8,13 @@ ipScannerControllers.controller('ipScannerCtrl', ['$scope', 'IPs', function($sco
    $scope.toint = function(num) {
       return parseInt(num);
    }
+   $scope.refreshTime = 10;
+   $scope.refreshPromise = $interval($scope.loadData(), $scope.refreshTime * 60 * 1000);
+   $scope.updateRefresh = function () {
+      $interval.cancel($scope.refreshPromise);
+      $interval($scope.loadData(), $scope.refreshTime * 60 * 1000);
+   }
+   
    $scope.subnets = {};
    $scope.toggledns = true;
    $scope.selectall = function (state) {
